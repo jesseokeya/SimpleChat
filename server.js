@@ -1,21 +1,20 @@
-'use strict';
 const express = require('express');
-const app = express();
 const path = require('path');
-const server = require('http').createServer(app);
-const io = require('socket.io').listen(server);
-const port = process.env.S_PORT || 5000;
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const PORT = process.env.PORT || 3000;
+
+app.use(express.static(path.join(__dirname, '/build')));
+
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/build/index.html');
+});
 
 let connections = 0;
 let allUsers = [];
 let AllMessages = [];
 let newMessages = 0;
-
-app.use(express.static(path.join(__dirname, 'build')));
-
-app.get('/', (req, res) => {
-  res.send('./build/index.html');
-})
 
 io.on('connection', (socket) => {
   connections++;
@@ -49,6 +48,7 @@ io.on('connection', (socket) => {
 
 });
 
-server.listen(port, () => {
-  console.log(`Server running on ${port}...`)
-})
+
+http.listen(PORT, () => {
+  console.log(`listening on *: ${PORT}`);
+});

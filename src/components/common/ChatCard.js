@@ -16,7 +16,7 @@ class ChatCard extends Component {
     super(props);
     this.state = {
       username: props.username,
-      socket: props.socket.connect(process.env.SOCKET_URL || window.location.hostname),
+      socket: props.socket(),
       newMessages: 0,
       chatMessage: '',
       chatMessages: [],
